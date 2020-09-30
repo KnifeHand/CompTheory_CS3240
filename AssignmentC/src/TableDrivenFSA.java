@@ -260,14 +260,15 @@ public class TableDrivenFSA implements java.io.Serializable {
            return false;
         }
         char[] chars = inputString.toCharArray();
-        for(char symbol: inputString.toCharArray()) {
+        for(char symbol : chars) {
             inputSymbol = Character.toString(symbol);
             currentState = this.nextState(currentState, inputSymbol);
         }
 
         for(int i = 0; i < acceptStates.length; i++) {
-            if(acceptStates[i] == currentState)
+            if(acceptStates[i] == currentState) {
                 return true;
+            }
         }
 
         return false;
