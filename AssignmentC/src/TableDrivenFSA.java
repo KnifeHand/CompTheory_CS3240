@@ -183,110 +183,116 @@ public class TableDrivenFSA implements java.io.Serializable {
      */
     public int nextState(final int currentState, final String inputSymbol) {
         //TODO
-//        int maxIndex = stateTransitionTable.length;
-//        if (inputSymbol == null
-//                || !alphabetContains(inputSymbol)
-//                || currentState > maxIndex
-//                || currentState < 0) {
-//            return currentState;
-        int column = 0;
-        for (String s: alphabet) {
-            if (s.equals(inputSymbol))
-            column++;
-            break;
-        }
-
-//        int symbolIndex = 0;
-//        for (int i = 0; i < alphabet.length; i++) {
-//            if (alphabet[i].equals(inputSymbol)) {
-//                symbolIndex = i;
-//                break;
-//            }
-//        }
-        //return stateTransitionTable[currentState][symbolIndex];
-        return  this.stateTransitionTable[currentState][column];
-    }
-
-    @Override
-    public String toString() {
-        String retVal = "";
-        if (this.alphabet != null) {
-            retVal = Stream.of(this.alphabet).collect(Collectors.joining(DELIMITER));
-            retVal += "\n";
-        }
-        if (this.stateTransitionTable != null) {
-            for (int[] row : this.stateTransitionTable) {
-                retVal += Arrays.stream(row)
-                        .mapToObj(String::valueOf)
-                        .collect(Collectors.joining(DELIMITER));
-                retVal += "\n";
+        int maxIndex = stateTransitionTable.length;
+        //int symbolIndex = 0;
+        if (inputSymbol == null
+                || !contains(inputSymbol)
+                || currentState > maxIndex
+                || currentState < 0) {
+            return currentState;
+//            int column = 0;
+//            for (String s : alphabet) {
+//                if (s.equals(inputSymbol))
+//                    //break;
+//                    //column = i;
+//                    //column += i;
+//                    column++;
+//                //break;
+            }
+        int symbolIndex = 0;
+        for (int i = 0; i < alphabet.length; i++) {
+            if (alphabet[i].equals(inputSymbol)) {
+                symbolIndex = i;
+                break;
             }
         }
-        if (this.acceptStates != null) {
-            retVal += "{";
-            retVal += Arrays.stream(this.acceptStates)
-                    .mapToObj(String::valueOf)
-                    .collect(Collectors.joining(DELIMITER));
-            retVal += "}\n";
+            return stateTransitionTable[currentState][symbolIndex];
+            //return this.stateTransitionTable[currentState][column];
         }
-        return retVal;
-    }
 
-    /**
+        @Override
+        public String toString () {
+            String retVal = "";
+            if (this.alphabet != null) {
+                retVal = Stream.of(this.alphabet).collect(Collectors.joining(DELIMITER));
+                retVal += "\n";
+            }
+            if (this.stateTransitionTable != null) {
+                for (int[] row : this.stateTransitionTable) {
+                    retVal += Arrays.stream(row)
+                            .mapToObj(String::valueOf)
+                            .collect(Collectors.joining(DELIMITER));
+                    retVal += "\n";
+                }
+            }
+            if (this.acceptStates != null) {
+                retVal += "{";
+                retVal += Arrays.stream(this.acceptStates)
+                        .mapToObj(String::valueOf)
+                        .collect(Collectors.joining(DELIMITER));
+                retVal += "}\n";
+            }
+            return retVal;
+        }
+
+        /**
          * Process a given input string to determine FSA acceptance.
          * @param inputString the string to process (ignores null input)
          * @return true if the end state is an accept state, false otherwise
          */
-    public boolean processString(final String inputString) {
-        //TODO
-//        if (inputString == null) {
-//            return false;
-//        }
-//        int currentState = 0;
-//        char[] chars = inputString.toCharArray();
-//        for (char character : chars) {
-//            currentState = nextState(currentState, character + "");
-//        }
-//        for (int i = 0; i < acceptStates.length; i++) {
-//            if (acceptStates[i] == currentState) {
-//                return true;
-//            }
-//        }
-//        return false;
-        int currentState = INITIAL_STATE;
-        String inputSymbol;
-
+        public boolean processString (final String inputString){
+            //TODO
         if (inputString == null) {
-           return false;
+            return false;
         }
-        char[] chars = inputString.toCharArray();
-        for(char symbol : chars) {
-            inputSymbol = Character.toString(symbol);
-            currentState = this.nextState(currentState, inputSymbol);
+        int currentState = 0;
+        char[] c = inputString.toCharArray();
+        for (char chars : c) {
+            currentState = nextState(currentState, chars + "");
         }
-
-        for(int i = 0; i < acceptStates.length; i++) {
-            if(acceptStates[i] == currentState) {
+        for (int i = 0; i < acceptStates.length; i++) {
+            if (acceptStates[i] == currentState) {
                 return true;
             }
         }
-
         return false;
 
-    }
-    /**
-     * Helper method checks if a given symbol is in the alphabet.
-     * @param inputString
-     * @return true if the end state is an accept state, false otherwise
-     * */
-//    private boolean alphabetContains(String inputString) {
-//        Iterator<Object> alphaItr = Arrays.stream(Arrays.stream(alphabet).toArray()).iterator();
-//        while (alphaItr.hasNext()) {
-//            if (alphaItr.next().equals(inputString)) {
-//                return true;
+//            int currentState = INITIAL_STATE;
+//            String inputSymbol;
+//
+//            if (inputString == null) {
+//                return false;
 //            }
-//        }
-//        return false;
-//    }
-}
+//            char[] chars = inputString.toCharArray();
+//            for (char symbol : chars) {
+//                inputSymbol = Character.toString(symbol);
+//                currentState = this.nextState(currentState, inputSymbol);
+//            }
+//
+//            for (int i = 0; i < acceptStates.length; i++) {
+//                if (acceptStates[i] == currentState) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+
+        }
+        /**
+         * Helper method checks if a given symbol is in the alphabet.
+         * @param inputString
+         * @return true if the end state is an accept state, false otherwise
+         * */
+        private boolean contains (String inputString){
+            Object[] s = Arrays.stream(alphabet).toArray();
+            Iterator<Object> it = Arrays.stream(s).iterator();
+            while (it.hasNext()) {
+                if (it.next().equals(inputString)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 
